@@ -1,10 +1,9 @@
 module.exports = (sequelize, dataType) => {
-    const Score = sequelize.define("score", {
-      nilai: {
-        type: dataType.INTEGER,
-      },
-    });
-  
-    return Score;
-  };
-  
+  const Score = sequelize.define("assessment", {
+    score: {
+      type: dataType.DOUBLE,
+    },
+  });
+
+  return Score;
+};

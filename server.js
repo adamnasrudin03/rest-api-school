@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const database = require("./app/models");
 const studentRouter = require("./app/routers/studentRouter");
+const teacherRouter = require("./app/routers/teacherRouter");
+const coursesRouter = require("./app/routers/coursesRouter");
+const scoreRouter = require("./app/routers/scoreRouter");
 
 const app = express();
 
@@ -18,3 +21,6 @@ database.sequelize.sync();
 
 //routes
 app.use("/students", studentRouter);
+app.use("/teachers", teacherRouter);
+app.use("/courses", coursesRouter);
+app.use("/assessments", scoreRouter);

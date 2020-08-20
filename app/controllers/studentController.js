@@ -54,7 +54,7 @@ exports.findById = (req, res) => {
         });
       } else {
         res.send({
-          message: "Find By Id successfully",
+          message: `Find by id ${id} successfully`,
           data: data,
         });
       }
@@ -73,7 +73,7 @@ exports.updateById = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Update Successfully",
+          message: `Update id ${id} successfully`,
         });
       } else {
         res.status(404).send({
@@ -95,7 +95,7 @@ exports.deleteById = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "delete successfully",
+          message: `Delete id ${id} successfully`,
         });
       } else {
         res.status(404).send({

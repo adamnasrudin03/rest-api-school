@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const database = require("./app/models");
+const studentRouter = require("./app/routers/studentRouter");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Generated database
-database.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
-});
+database.sequelize.sync();
+
+//routes
+app.use("/students", studentRouter);

@@ -9,10 +9,12 @@ exports.addOne = (req, res) => {
     return null;
   }
 
-  return Model.create(req.body)
+  Model.create(req.body)
     .then((data) => {
-      console.log(">> Created lesson: " + JSON.stringify(data, null, 4));
-      return data;
+      res.send({
+        message: "Create successfully",
+        data: data,
+      });
     })
     .catch((err) => {
       res.status(500).send({

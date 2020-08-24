@@ -29,7 +29,9 @@ exports.addOne = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  Model.findAll()
+  Model.findAll({
+    include: ["lesson",  "student", "teacher"],
+  })
     .then((data) => {
       res.send({
         message: "Find All successfully",

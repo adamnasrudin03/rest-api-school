@@ -1,5 +1,5 @@
 const db = require("../models");
-const Model = db.course;
+const Model = db.lesson;
 
 exports.addOne = (req, res) => {
   if (!req.body.name || !req.body.total_chapter || !req.body.description) {
@@ -9,12 +9,10 @@ exports.addOne = (req, res) => {
     return null;
   }
 
-  Model.create(req.body)
+  return Model.create(req.body)
     .then((data) => {
-      res.send({
-        message: "Create successfully",
-        data: data,
-      });
+      console.log(">> Created lesson: " + JSON.stringify(data, null, 4));
+      return data;
     })
     .catch((err) => {
       res.status(500).send({

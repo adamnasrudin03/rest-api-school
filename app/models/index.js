@@ -21,14 +21,14 @@ db.sequelize = sequelize;
 
 db.student = require("./studentModel")(sequelize, Sequelize);
 db.teacher = require("./teacherModel")(sequelize, Sequelize);
-db.course = require("./coursesModel")(sequelize, Sequelize);
+db.lesson = require("./lessonModel")(sequelize, Sequelize);
 db.score = require("./scoreModel")(sequelize, Sequelize);
 
 db.teacher.hasMany(db.score);
 db.score.belongsTo(db.teacher);
 
-db.course.hasMany(db.score);
-db.score.belongsTo(db.course);
+db.lesson.hasMany(db.score);
+db.score.belongsTo(db.lesson);
 
 db.student.hasMany(db.score);
 db.score.belongsTo(db.student);

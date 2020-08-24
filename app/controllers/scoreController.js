@@ -4,9 +4,9 @@ const Model = db.score;
 exports.addOne = (req, res) => {
   if (
     !req.body.score ||
-    !req.body.courese.id ||
-    !req.body.teacher.id ||
-    !req.body.student.id
+    !req.body.lessonId ||
+    !req.body.teacherId||
+    !req.body.studentId
   ) {
     res.status(400).send({
       message: "Data cannot be empty!",
@@ -48,7 +48,9 @@ exports.findAll = (req, res) => {
 exports.findById = (req, res) => {
   const id = req.params.id;
 
-  Model.findByPk(id)
+  Model.findByPk(id, {
+    include: ["lesson",  "student", "teacher"],
+  })
     .then((data) => {
       if (data == null) {
         res.status(404).send({

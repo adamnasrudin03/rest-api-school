@@ -1,5 +1,9 @@
 module.exports = (sequelize, dataType) => {
   const Lesson = sequelize.define("lesson", {
+    kodeLesson: {
+      type: dataType.STRING,
+      unique: true,
+    },
     name: {
       type: dataType.STRING,
     },

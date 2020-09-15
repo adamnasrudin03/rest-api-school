@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const database = require("./app/models");
+const Role = database.role;
+
 const studentRouter = require("./app/routers/studentRouter");
 const teacherRouter = require("./app/routers/teacherRouter");
 const lessonRouter = require("./app/routers/lessonRouter");
@@ -27,12 +29,33 @@ database.sequelize.sync().then(() => {
   console.log(" re-sync db.");
 });
 
-// database.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and re-sync db.");
-// });
+function initial() {
+  Role.create({
+    id: 1,
+    name: "user",
+  });
+
+  Role.create({
+    id: 2,
+    name: "admin",
+  });
+}
+
+// database.sequelize
+//   .sync({ force: true })
+//   .then(() => {
+//     initial();
+//     console.log("Drop and re-sync db successfully");
+//   })
+//   .catch((err) => {
+//     console.log(err.message);
+//   });
 
 //routes
 app.use("/students", studentRouter);
 app.use("/teachers", teacherRouter);
 app.use("/lessons", lessonRouter);
 app.use("/assessments", scoreRouter);
+
+require("./app/routers/authRouter")(app);
+require("./app/routers/userRouter")(app);

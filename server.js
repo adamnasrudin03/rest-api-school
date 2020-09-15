@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const database = require("./app/models");
 const studentRouter = require("./app/routers/studentRouter");
 const teacherRouter = require("./app/routers/teacherRouter");
@@ -8,14 +9,18 @@ const scoreRouter = require("./app/routers/scoreRouter");
 
 const app = express();
 
+var corsOptions = {
+  origin: "http://localhost:8081",
+};
+
 const PORT = process.env.PORT || 8082;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
 
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 //Generated database
 database.sequelize.sync().then(() => {

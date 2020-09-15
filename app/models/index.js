@@ -24,6 +24,22 @@ db.teacher = require("./teacherModel")(sequelize, Sequelize);
 db.lesson = require("./lessonModel")(sequelize, Sequelize);
 db.score = require("./scoreModel")(sequelize, Sequelize);
 
+db.user = require("./userModel")(sequelize, Sequelize);
+db.role = require("./roleModel")(sequelize, Sequelize);
+
+db.role.belongsToMany(db.user, {
+  through: "user_roles",
+  foreignKey: "roleId",
+  otherKey: "userId"
+});
+db.user.belongsToMany(db.role, {
+  through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId"
+});
+
+db.ROLES = ["user", "admin"];
+
 db.teacher.hasMany(db.score);
 db.score.belongsTo(db.teacher);
 

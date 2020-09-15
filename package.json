@@ -14,7 +14,8 @@
     "api",
     "sequelize",
     "mysql",
-    "body-parser"
+    "body-parser",
+    "JWT Authication"
   ],
   "author": "adamnasrudin03",
   "license": "ISC",

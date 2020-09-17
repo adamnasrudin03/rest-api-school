@@ -59,3 +59,9 @@ app.use("/assessments", scoreRouter);
 
 require("./app/routers/authRouter")(app);
 require("./app/routers/userRouter")(app);
+
+app.use(function (req, res, next) {
+  res.status(404).send({
+    message: "Unable to find the requested resource!",
+  });
+});

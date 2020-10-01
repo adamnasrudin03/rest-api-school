@@ -14,4 +14,5 @@ module.exports = function (app) {
   );
 
   app.put("/api/auth/update/:id", [authJwt.verifyToken], controller.updateById);
+  app.get("/api/auth/users/:id", [authJwt.verifyToken], controller.findById);
 };

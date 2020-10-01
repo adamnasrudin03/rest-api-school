@@ -13,6 +13,7 @@ module.exports = function (app) {
     controller.adminBoard
   );
 
-  app.put("/api/auth/update/:id", [authJwt.verifyToken], controller.updateById);
-  app.get("/api/auth/users/:id", [authJwt.verifyToken], controller.findById);
+  app.put("/users/update/:id", [authJwt.verifyToken], controller.updateById);
+  app.get("/users/:id", [authJwt.verifyToken], controller.findById);
+  app.delete("/users/delete/:id", [authJwt.verifyToken, authJwt.isAdmin], controller.deleteById);
 };

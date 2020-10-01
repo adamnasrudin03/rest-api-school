@@ -56,6 +56,29 @@ exports.updateById = (req, res) => {
     });
 };
 
+exports.deleteById = (req, res) => {
+  const id = req.params.id;
+
+  User.destroy({ where: { id: id } })
+    .then((num) => {
+      console.log("num : ", num);
+      if (num == 1) {
+        res.send({
+          message: `Delete id ${id} successfully`,
+        });
+      } else {
+        res.status(404).send({
+          message: `data with id ${id}, not found`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message,
+      });
+    });
+};
+
 exports.findById = (req, res) => {
   const id = req.params.id;
 
@@ -73,7 +96,7 @@ exports.findById = (req, res) => {
             username: data.username,
             email: data.email,
             createdAt: data.createdAt,
-            updatedAt: data.updatedAt
+            updatedAt: data.updatedAt,
           },
         });
       }

@@ -90,15 +90,22 @@ exports.findById = (req, res) => {
           message: `Data with id ${id}, not found`,
         });
       } else {
-        res.send({
-          message: `Find by id ${id} successfully`,
-          data: {
-            id: data.id,
-            username: data.username,
-            email: data.email,
-            createdAt: data.createdAt,
-            updatedAt: data.updatedAt,
-          },
+        var authorities = [];
+        data.getRoles().then((roles) => {
+          for (let i = 0; i < roles.length; i++) {
+            authorities.push("ROLE_" + roles[i].name.toUpperCase());
+          }
+          res.send({
+            message: `Find by id ${id} successfully`,
+            data: {
+              id: data.id,
+              username: data.username,
+              email: data.email,
+              roles: authorities,
+              createdAt: data.createdAt,
+              updatedAt: data.updatedAt,
+            },
+          });
         });
       }
     })
@@ -119,10 +126,10 @@ exports.findAll = (req, res) => {
     where: username || email,
   })
     .then((data) => {
-      console.log("data : " , data)
+      console.log("data : ", data);
       res.send({
         message: "Find All successfully",
-        data: data
+        data: data,
       });
     })
     .catch((err) => {

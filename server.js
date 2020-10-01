@@ -61,6 +61,16 @@ app.use("/assessments", scoreRouter);
 require("./app/routers/authRouter")(app);
 require("./app/routers/userRouter")(app);
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-access-token");
+  next();
+});
+
 app.use([authJwt.verifyToken], function (req, res, next) {
   res.status(404).send({
     message: "Unable to find the requested resource!",

@@ -1,6 +1,7 @@
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
+const Op = db.Sequelize.Op;
 
 var bcrypt = require("bcryptjs");
 
@@ -100,6 +101,29 @@ exports.findById = (req, res) => {
           },
         });
       }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message,
+      });
+    });
+};
+
+exports.findAll = (req, res) => {
+  let username = req.query.username;
+  let email = req.query.email;
+  username = username ? { username: { [Op.like]: `%${username}%` } } : null;
+  email = email ? { email: { [Op.like]: `%${email}%` } } : null;
+
+  User.findAll({
+    where: username || email,
+  })
+    .then((data) => {
+      console.log("data : " , data)
+      res.send({
+        message: "Find All successfully",
+        data: data
+      });
     })
     .catch((err) => {
       res.status(500).send({

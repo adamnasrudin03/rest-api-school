@@ -62,8 +62,8 @@ exports.findAll = (req, res) => {
         data: data.rows,
         total_data : data.count,
         data_perPage: perPage,
-        current_page: currentPage,
-        total_page :  Math.ceil(data.count / perPage)
+        current_page: currentPage,       
+        total_page : Math.ceil(data.count / perPage) == 0 ? currentPage : Math.ceil(data.count / perPage)
 
       });
     })

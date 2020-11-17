@@ -29,16 +29,16 @@ exports.addOne = (req, res) => {
     });
 };
 
-exports.findAll = (req, res) => {  
+exports.findAll = (req, res) => {
   const currentPage = parseInt(req.query.page) || 1;
   const perPage = parseInt(req.query.perPage) || 5;
-  let offset = 0 ;
-  if ( currentPage == 1) {
+  let offset = 0;
+  if (currentPage == 1) {
     offset = 0;
-  } else if ( currentPage == 2) {
+  } else if (currentPage == 2) {
     offset = perPage;
   } else {
-    offset = (currentPage * perPage) - perPage;
+    offset = currentPage * perPage - perPage;
   }
 
   let npm = req.query.npm;
@@ -60,11 +60,13 @@ exports.findAll = (req, res) => {
       res.send({
         message: "Find All successfully",
         data: data.rows,
-        total_data : data.count,
+        total_data: data.count,
         data_perPage: perPage,
-        current_page: currentPage,       
-        total_page : Math.ceil(data.count / perPage) == 0 ? currentPage : Math.ceil(data.count / perPage)
-
+        current_page: currentPage,
+        total_page:
+          Math.ceil(data.count / perPage) == 0
+            ? currentPage
+            : Math.ceil(data.count / perPage),
       });
     })
     .catch((err) => {

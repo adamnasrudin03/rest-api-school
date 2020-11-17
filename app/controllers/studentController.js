@@ -1,5 +1,6 @@
 const db = require("../models");
 const Model = db.student;
+const Op = db.Sequelize.Op;
 
 exports.addOne = (req, res) => {
   if (
@@ -28,12 +29,42 @@ exports.addOne = (req, res) => {
     });
 };
 
-exports.findAll = (req, res) => {
-  Model.findAll()
+exports.findAll = (req, res) => {  
+  const currentPage = parseInt(req.query.page) || 1;
+  const perPage = parseInt(req.query.perPage) || 5;
+  let offset = 0 ;
+  if ( currentPage == 1) {
+    offset = 0;
+  } else if ( currentPage == 2) {
+    offset = perPage;
+  } else {
+    offset = (currentPage * perPage) - perPage;
+  }
+
+  let npm = req.query.npm;
+  let name = req.query.name;
+  let gender = req.query.gender;
+  let study = req.query.class;
+
+  npm = npm ? { npm: { [Op.like]: `%${npm}%` } } : null;
+  name = name ? { name: { [Op.like]: `%${name}%` } } : null;
+  gender = gender ? { gender: { [Op.like]: `%${gender}%` } } : null;
+  study = study ? { class: { [Op.like]: `%${study}%` } } : null;
+
+  Model.findAndCountAll({
+    limit: parseInt(perPage),
+    offset: offset,
+    where: npm || name || gender || study,
+  })
     .then((data) => {
       res.send({
         message: "Find All successfully",
-        data: data,
+        data: data.rows,
+        total_data : data.count,
+        data_perPage: perPage,
+        current_page: currentPage,
+        total_page :  Math.ceil(data.count / perPage)
+
       });
     })
     .catch((err) => {

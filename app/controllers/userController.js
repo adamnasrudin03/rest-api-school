@@ -90,7 +90,7 @@ exports.findById = (req, res) => {
           message: `Data with id ${id}, not found`,
         });
       } else {
-        var authorities = [];
+        const authorities = [];
         data.getRoles().then((roles) => {
           for (let i = 0; i < roles.length; i++) {
             authorities.push("ROLE_" + roles[i].name.toUpperCase());
@@ -139,9 +139,15 @@ exports.findAll = (req, res) => {
     where: username || email,
   })
     .then((data) => {
+      var newData = [];
+      for (let i = 0; i < data.rows.length; i++) {
+        data.rows[i].dataValues.password = "access not accepted";
+        newData.push(data.rows[i].dataValues);
+      }
+
       res.send({
         message: "Find All successfully",
-        data: data.rows,
+        data: newData,
         total_data: data.count,
         data_perPage: perPage,
         current_page: currentPage,

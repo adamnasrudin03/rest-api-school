@@ -1,5 +1,6 @@
 const db = require("../models");
 const Model = db.lesson;
+const Op = db.Sequelize.Op;
 
 exports.addOne = (req, res) => {
   if (!req.body.name || !req.body.total_chapter || !req.body.description) {
@@ -24,11 +25,49 @@ exports.addOne = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  Model.findAll()
+  const currentPage = parseInt(req.query.page) || 1;
+  const perPage = parseInt(req.query.perPage) || 5;
+  let offset = 0;
+  if (currentPage == 1) {
+    offset = 0;
+  } else if (currentPage == 2) {
+    offset = perPage;
+  } else {
+    offset = currentPage * perPage - perPage;
+  }
+
+  let kodeLesson = req.query.kodeLesson;
+  let name = req.query.name;
+  let totalChapter = req.query.totalChapter;
+  let description = req.query.description;
+
+  kodeLesson = kodeLesson
+    ? { kodeLesson: { [Op.like]: `%${kodeLesson}%` } }
+    : null;
+  name = name ? { name: { [Op.like]: `%${name}%` } } : null;
+  totalChapter = totalChapter
+    ? { total_chapter: { [Op.like]: `%${totalChapter}%` } }
+    : null;
+  description = description
+    ? { description: { [Op.like]: `%${description}%` } }
+    : null;
+
+  Model.findAndCountAll({
+    limit: parseInt(perPage),
+    offset: offset,
+    where: kodeLesson || name || totalChapter || description,
+  })
     .then((data) => {
       res.send({
         message: "Find All successfully",
-        data: data,
+        data: data.rows,
+        total_data: data.count,
+        data_perPage: perPage,
+        current_page: currentPage,
+        total_page:
+          Math.ceil(data.count / perPage) == 0
+            ? currentPage
+            : Math.ceil(data.count / perPage),
       });
     })
     .catch((err) => {

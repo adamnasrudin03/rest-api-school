@@ -1,5 +1,5 @@
 const db = require("../models");
-const User = db.user;
+const Model = db.user;
 const Role = db.role;
 const Op = db.Sequelize.Op;
 
@@ -7,7 +7,7 @@ var bcrypt = require("bcryptjs");
 
 exports.updateById = (req, res) => {
   const id = req.params.id;
-  User.findOne({
+  Model.findOne({
     where: {
       id: id,
     },
@@ -34,7 +34,7 @@ exports.updateById = (req, res) => {
         password: bcrypt.hashSync(req.body.newPassword, 8),
       };
 
-      User.update(dataUpdate, { where: { id: id } })
+      Model.update(dataUpdate, { where: { id: id } })
         .then((data) => {
           if (data == 1) {
             res.send({
@@ -60,7 +60,7 @@ exports.updateById = (req, res) => {
 exports.deleteById = (req, res) => {
   const id = req.params.id;
 
-  User.destroy({ where: { id: id } })
+  Model.destroy({ where: { id: id } })
     .then((num) => {
       console.log("num : ", num);
       if (num == 1) {
@@ -83,7 +83,7 @@ exports.deleteById = (req, res) => {
 exports.findById = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id)
+  Model.findByPk(id)
     .then((data) => {
       if (data == null) {
         res.status(404).send({
@@ -117,19 +117,38 @@ exports.findById = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
+  const currentPage = parseInt(req.query.page) || 1;
+  const perPage = parseInt(req.query.perPage) || 5;
+  let offset = 0;
+  if (currentPage == 1) {
+    offset = 0;
+  } else if (currentPage == 2) {
+    offset = perPage;
+  } else {
+    offset = currentPage * perPage - perPage;
+  }
+
   let username = req.query.username;
   let email = req.query.email;
   username = username ? { username: { [Op.like]: `%${username}%` } } : null;
   email = email ? { email: { [Op.like]: `%${email}%` } } : null;
 
-  User.findAll({
+  Model.findAndCountAll({
+    limit: parseInt(perPage),
+    offset: offset,
     where: username || email,
   })
     .then((data) => {
-      console.log("data : ", data);
       res.send({
         message: "Find All successfully",
-        data: data,
+        data: data.rows,
+        total_data: data.count,
+        data_perPage: perPage,
+        current_page: currentPage,
+        total_page:
+          Math.ceil(data.count / perPage) == 0
+            ? currentPage
+            : Math.ceil(data.count / perPage),
       });
     })
     .catch((err) => {

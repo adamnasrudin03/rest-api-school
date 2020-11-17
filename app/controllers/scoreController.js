@@ -1,5 +1,6 @@
 const db = require("../models");
 const Model = db.score;
+const Op = db.Sequelize.Op;
 
 exports.addOne = (req, res) => {
   if (
